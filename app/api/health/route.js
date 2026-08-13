@@ -37,7 +37,7 @@ export async function GET() {
 
   return NextResponse.json({
     status: 'ok',
-    phase: 'Phase 2 — Roadmap',
+    phase: 'Phase 3 — Progression',
     supabase: {
       status: supabaseStatus,
       configured: isConfigured,
