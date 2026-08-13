@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Shield, Compass, Trophy, User, LogOut, Menu, X } from 'lucide-react';
+import { Shield, Compass, Trophy, FileText, User, LogOut, Menu, X } from 'lucide-react';
 import { signOutUser } from '@/lib/auth';
 
 /**
@@ -25,6 +25,7 @@ export default function DashboardLayout({ children }) {
   const navItems = [
     { label: 'Feuille de route', href: '/roadmap', icon: Compass },
     { label: 'Progression', href: '/progression', icon: Trophy },
+    { label: 'Notes & Write-ups', href: '/notes', icon: FileText },
     { label: 'Mon Profil', href: '/profile', icon: User },
   ];
 

@@ -110,7 +110,7 @@ Critères d'acceptation :
 
 ---
 
-## Phase 4 — Notes et write-ups
+## Phase 4 — Notes et write-ups ✅ (Clôturée)
 **Objectif** : je peux documenter ce que j'apprends.
 
 User Stories :
@@ -119,10 +119,10 @@ User Stories :
 3. En tant qu'utilisateur, je peux retrouver mes notes par domaine
 
 Tâches atomiques :
-- [ ] Table `notes` (id, user_id, domain_id, task_id nullable, titre, contenu_markdown, created_at)
-- [ ] Éditeur Markdown simple (pas besoin de WYSIWYG complexe)
-- [ ] Page `/notes` avec filtre par domaine
-- [ ] Rendu Markdown à l'affichage
+- [x] Table `notes` (id, user_id, domain_id, task_id nullable, titre, contenu_markdown, created_at)
+- [x] Éditeur Markdown simple (pas besoin de WYSIWYG complexe)
+- [x] Page `/notes` avec filtre par domaine
+- [x] Rendu Markdown à l'affichage
 
 Critères d'acceptation :
 - Une note peut exister sans être liée à une tâche précise (note libre)
