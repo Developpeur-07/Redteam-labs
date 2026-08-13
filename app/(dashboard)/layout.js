@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Shield, Compass, Trophy, FileText, User, LogOut, Menu, X } from 'lucide-react';
+import { Shield, Compass, Trophy, FileText, User, LogOut, Menu, X, Bot, Sparkles } from 'lucide-react';
 import { signOutUser } from '@/lib/auth';
+import MentorDrawer from '@/components/MentorDrawer';
 
 /**
  * Layout partagé pour le groupe de routes (dashboard).
@@ -15,6 +16,7 @@ export default function DashboardLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mentorOpen, setMentorOpen] = useState(false);
 
   const handleLogout = async () => {
     await signOutUser();
@@ -66,8 +68,18 @@ export default function DashboardLayout({ children }) {
             })}
           </nav>
 
-          {/* User actions */}
+          {/* User actions & Mentor IA Button */}
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setMentorOpen(true)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-cyber-accent/10 text-cyber-accent border border-cyber-accent/20 hover:bg-cyber-accent/20 transition-all shadow-cyber-sm"
+              title="Ouvrir le Mentor IA"
+            >
+              <Bot className="w-4 h-4" />
+              <span className="hidden sm:inline">Mentor IA</span>
+              <Sparkles className="w-3 h-3" />
+            </button>
+
             <button
               onClick={handleLogout}
               className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all"
@@ -110,7 +122,19 @@ export default function DashboardLayout({ children }) {
                 </Link>
               );
             })}
-            <div className="pt-2 mt-2 border-t border-gray-800/80">
+
+            <div className="pt-2 mt-2 border-t border-gray-800/80 space-y-1">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setMentorOpen(true);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-cyber-accent bg-cyber-accent/10 hover:bg-cyber-accent/20 transition-all"
+              >
+                <Bot className="w-4 h-4" />
+                <span>Ouvrir le Mentor IA</span>
+              </button>
+
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all"
@@ -127,6 +151,9 @@ export default function DashboardLayout({ children }) {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {children}
       </main>
+
+      {/* Volet Mentor IA global */}
+      <MentorDrawer isOpen={mentorOpen} onClose={() => setMentorOpen(false)} />
     </div>
   );
 }

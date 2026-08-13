@@ -135,7 +135,21 @@ Critères d'acceptation :
 
 ---
 
-## Phase 5+ — Hors scope MVP (rappel)
-Agents IA (Mentor, Planner, Skill Analyzer...), orchestrateur, SaaS multi-utilisateurs.
-**Ne pas commencer avant que les Phases 0 à 4 soient fonctionnelles et utilisées
-quotidiennement.**
+## Phase 5 — Premier Agent IA (Mentor Cybersécurité) ✅ (Clôturée)
+**Objectif** : intégrer un Mentor IA pédagogique pour guider l'utilisateur sur sa roadmap et ses notes.
+
+User Stories :
+1. En tant qu'utilisateur, je peux échanger avec le Mentor IA depuis n'importe quelle page du dashboard
+2. En tant qu'utilisateur, je peux demander l'aide ou un indice au Mentor IA directement sur une tâche spécifique
+3. En tant qu'utilisateur, j'obtiens des explications pédagogiques structurées en Markdown (commandes CLI, code)
+
+Tâches atomiques :
+- [x] Route API `/api/mentor/chat` avec intégration Gemini AI
+- [x] Helper serveur `lib/mentor.js` avec posture d'expert cybersécurité
+- [x] Composant Volet de Chat `MentorDrawer.js` avec rendu Markdown
+- [x] Bouton d'action rapide "Mentor IA" sur la roadmap et dans la barre de navigation
+
+---
+
+## Phases Suivantes (Vision Long Terme)
+Orchestrateur multi-agents (Planner, Skill Analyzer), SaaS multi-utilisateurs, badges avancés.

@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Tag, Loader2, FileText } from 'lucide-react';
+import { Check, Tag, Loader2, FileText, Bot } from 'lucide-react';
 import NoteModal from './NoteModal';
+import MentorDrawer from './MentorDrawer';
 
 /**
- * Composant client pour afficher une tâche de la roadmap et permettre sa validation interactive + la prise de note rapide.
+ * Composant client pour afficher une tâche de la roadmap et permettre sa validation interactive + la prise de note rapide + l'aide Mentor IA.
  * @param {{
  *   task: { id: string, domain_id?: string, titre: string, description?: string, domain?: { id: string, nom: string } },
  *   initialCompleted?: boolean
@@ -17,6 +18,7 @@ export default function TaskToggle({ task, initialCompleted = false }) {
   const [completed, setCompleted] = useState(initialCompleted);
   const [loading, setLoading] = useState(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [mentorOpen, setMentorOpen] = useState(false);
 
   const handleToggle = async () => {
     if (loading) return;
@@ -101,7 +103,7 @@ export default function TaskToggle({ task, initialCompleted = false }) {
                 {task.titre}
               </h3>
 
-              <div className="flex items-center gap-2 self-start">
+              <div className="flex items-center gap-2 self-start flex-wrap">
                 {task.domain && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyber-accent/10 text-cyber-accent text-[11px] font-semibold shadow-cyber-sm">
                     <Tag className="w-3 h-3" />
@@ -117,6 +119,16 @@ export default function TaskToggle({ task, initialCompleted = false }) {
                 >
                   <FileText className="w-3 h-3 text-cyber-accent" />
                   <span>Note</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMentorOpen(true)}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyber-accent/10 hover:bg-cyber-accent/20 text-cyber-accent text-[11px] font-semibold transition-all shadow-cyber-sm"
+                  title="Demander de l'aide ou un indice au Mentor IA sur cette tâche"
+                >
+                  <Bot className="w-3 h-3" />
+                  <span>Mentor IA</span>
                 </button>
               </div>
             </div>
@@ -138,6 +150,18 @@ export default function TaskToggle({ task, initialCompleted = false }) {
         defaultDomainId={task.domain_id || task.domain?.id || ''}
         defaultTaskId={task.id}
         defaultTaskTitle={task.titre}
+      />
+
+      {/* Volet Mentor IA spécifique à cette tâche */}
+      <MentorDrawer
+        isOpen={mentorOpen}
+        onClose={() => setMentorOpen(false)}
+        initialContextTask={{
+          id: task.id,
+          titre: task.titre,
+          description: task.description,
+          domainNom: task.domain?.nom || 'Général',
+        }}
       />
     </>
   );
