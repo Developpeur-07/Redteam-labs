@@ -201,7 +201,7 @@ Tâches atomiques :
 
 ---
 
-## Phase 10 — Quiz & Micro-Défis IA Quotidiens ⏳ (En cours)
+## Phase 10 — Quiz & Micro-Défis IA Quotidiens ✅ (Clôturée)
 **Objectif** : Tester l'assimilation théorique et pratique des tâches via des Quiz QCM générés par l'IA Gemini et récompenser les réussites par des bonus d'XP (+25 à +50 XP).
 
 User Stories :
@@ -218,5 +218,21 @@ Tâches atomiques :
 
 ---
 
+## Phase 9 — Export Write-ups & Portfolio Apprenant ⏳ (En cours)
+**Objectif** : Valoriser et partager l'ensemble des accomplissements, badges et write-ups d'apprentissage via une page dédiée `/portfolio` et permettre l'exportation des notes au format Markdown (.md) et PDF.
+
+User Stories :
+1. En tant qu'utilisateur, je peux consulter une vitrine consolidée de mon profil, de mes badges et de mes write-ups sur la page `/portfolio`.
+2. En tant qu'utilisateur, je peux télécharger mes notes/write-ups sous forme de fichiers Markdown (.md) individuels ou en dossier combiné.
+3. En tant qu'utilisateur, je peux imprimer ou exporter mon portfolio d'apprentissage en PDF.
+
+Tâches atomiques :
+- [x] Module serveur/client `lib/export.js` pour la génération et le téléchargement des fichiers Markdown
+- [x] Page `/portfolio` (`app/(dashboard)/portfolio/page.js`)
+- [x] Ajout du lien "Portfolio" dans la navigation `layout.js`
+- [x] Intégration de l'exportation Markdown directe sur `components/NotesView.js`
+
+---
+
 ## Phases Suivantes (Vision Long Terme)
-Export Write-ups & Portfolio Apprenant, SaaS multi-utilisateurs.
+SaaS multi-utilisateurs, rappels d'assiduité.

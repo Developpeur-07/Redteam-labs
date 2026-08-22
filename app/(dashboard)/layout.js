@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Shield, Compass, Trophy, FileText, User, LogOut, Menu, X, Bot, Sparkles } from 'lucide-react';
+import { Shield, Compass, Trophy, FileText, User, LogOut, Menu, X, Bot, Sparkles, Briefcase } from 'lucide-react';
 import { signOutUser } from '@/lib/auth';
 import MentorDrawer from '@/components/MentorDrawer';
 
@@ -28,6 +28,7 @@ export default function DashboardLayout({ children }) {
     { label: 'Feuille de route', href: '/roadmap', icon: Compass },
     { label: 'Progression', href: '/progression', icon: Trophy },
     { label: 'Notes & Write-ups', href: '/notes', icon: FileText },
+    { label: 'Portfolio', href: '/portfolio', icon: Briefcase },
     { label: 'Mon Profil', href: '/profile', icon: User },
   ];
 

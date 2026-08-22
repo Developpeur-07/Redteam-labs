@@ -13,9 +13,11 @@ import {
   FileText,
   ChevronDown,
   ChevronUp,
+  Download,
 } from 'lucide-react';
 import MarkdownRenderer from './MarkdownRenderer';
 import NoteModal from './NoteModal';
+import { downloadMarkdownFile, generateSingleNoteMarkdown } from '@/lib/export';
 
 /**
  * Vue principale interactive des notes et write-ups avec filtres, recherche et édition.
@@ -31,7 +33,7 @@ export default function NotesView({ initialNotes = [], domains = [] }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingNote, setEditingNote] = useState(null);
-  const [expandedNoteId, setExpandedNoteId] = useState(null);
+  const [expandedNoteIds, setExpandedNoteIds] = useState(new Set());
 
   // Filtrage des notes par domaine et mot-clé
   const filteredNotes = notes.filter((note) => {
@@ -233,8 +235,16 @@ export default function NotesView({ initialNotes = [], domains = [] }) {
                     </div>
                   </div>
 
-                  {/* Actions rapide éditer / supprimer */}
+                  {/* Actions rapide exporter / éditer / supprimer */}
                   <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      type="button"
+                      onClick={(e) => handleDownloadSingleNote(note, e)}
+                      className="p-2 text-gray-400 hover:text-cyan-400 rounded-xl hover:bg-cyber-surface transition-all"
+                      title="Télécharger la note au format Markdown (.md)"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
                     <button
                       type="button"
                       onClick={(e) => handleOpenEditModal(note, e)}
