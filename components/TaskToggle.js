@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Tag, Loader2, FileText, Bot } from 'lucide-react';
+import { Check, Tag, Loader2, FileText, Bot, HelpCircle } from 'lucide-react';
 import NoteModal from './NoteModal';
 import MentorDrawer from './MentorDrawer';
 import BadgeUnlockModal from './BadgeUnlockModal';
+import QuizModal from './QuizModal';
 
 /**
- * Composant client pour afficher une tâche de la roadmap et permettre sa validation interactive + la prise de note rapide + l'aide Mentor IA.
+ * Composant client pour afficher une tâche de la roadmap et permettre sa validation interactive + la prise de note rapide + l'aide Mentor IA + Quiz IA.
  * @param {{
  *   task: { id: string, domain_id?: string, titre: string, description?: string, domain?: { id: string, nom: string } },
  *   initialCompleted?: boolean
@@ -20,6 +21,7 @@ export default function TaskToggle({ task, initialCompleted = false }) {
   const [loading, setLoading] = useState(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [mentorOpen, setMentorOpen] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const [unlockedBadges, setUnlockedBadges] = useState([]);
 
   const handleToggle = async () => {
@@ -125,6 +127,16 @@ export default function TaskToggle({ task, initialCompleted = false }) {
 
                 <button
                   type="button"
+                  onClick={() => setQuizOpen(true)}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-[11px] font-semibold transition-all shadow-cyber-sm border border-emerald-500/20"
+                  title="Résoudre un Quiz IA QCM pour gagner du bonus d'XP"
+                >
+                  <HelpCircle className="w-3 h-3" />
+                  <span>Quiz (+XP)</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => setNoteModalOpen(true)}
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyber-surface hover:bg-cyber-surface/80 text-gray-300 hover:text-white text-[11px] font-semibold transition-all shadow-cyber-sm"
                   title="Rédiger une note liée à cette tâche"
@@ -153,6 +165,14 @@ export default function TaskToggle({ task, initialCompleted = false }) {
           </div>
         </div>
       </div>
+
+      {/* Modal de Quiz QCM */}
+      <QuizModal
+        isOpen={quizOpen}
+        onClose={() => setQuizOpen(false)}
+        task={task}
+        onSuccess={() => router.refresh()}
+      />
 
       {/* Modal de note rapide */}
       <NoteModal

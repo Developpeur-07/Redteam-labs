@@ -185,7 +185,7 @@ Tâches atomiques :
 
 ---
 
-## Phase 8 — Agent IA Skill Analyzer ⏳ (En cours)
+## Phase 8 — Agent IA Skill Analyzer ✅ (Clôturée)
 **Objectif** : Analyser l'ensemble des compétences validées, des notes rédigées et de l'assiduité pour produire un bilan de compétences IA structuré avec identification des lacunes et recommandations ciblées.
 
 User Stories :
@@ -201,5 +201,22 @@ Tâches atomiques :
 
 ---
 
+## Phase 10 — Quiz & Micro-Défis IA Quotidiens ⏳ (En cours)
+**Objectif** : Tester l'assimilation théorique et pratique des tâches via des Quiz QCM générés par l'IA Gemini et récompenser les réussites par des bonus d'XP (+25 à +50 XP).
+
+User Stories :
+1. En tant qu'utilisateur, je peux lancer un Quiz QCM IA directement depuis n'importe quelle tâche de ma roadmap.
+2. En tant qu'utilisateur, j'obtiens un retour immédiat sur mes choix avec des explications pédagogiques pour chaque question.
+3. En tant qu'utilisateur, réussir un quiz crédite automatiquement un bonus d'XP et enregistre mes scores.
+
+Tâches atomiques :
+- [x] Migration SQL `07_quiz.sql` (table `quiz_results` et RLS)
+- [x] Helper serveur `lib/quiz.js` avec l'API Gemini REST
+- [x] Routes API `/api/quiz/generate` et `/api/quiz/submit`
+- [x] Composant modal interactif `components/QuizModal.js`
+- [x] Intégration sur le composant `TaskToggle.js`
+
+---
+
 ## Phases Suivantes (Vision Long Terme)
-Export Write-ups & Portfolio Apprenant, Quiz & Défis IA Quotidiens, SaaS multi-utilisateurs.
+Export Write-ups & Portfolio Apprenant, SaaS multi-utilisateurs.
