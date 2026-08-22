@@ -14,9 +14,10 @@ import { getProfileForRoadmap } from '@/lib/roadmap';
 import { getProgressionOverview } from '@/lib/progression';
 import { getAllBadgesWithUserStatus } from '@/lib/badges';
 import BadgeCard from '@/components/BadgeCard';
+import SkillAnalyzerWidget from '@/components/SkillAnalyzerWidget';
 
 /**
- * Page Progression — Affiche l'XP, le niveau, le streak, l'avancement par domaine et les badges débloqués.
+ * Page Progression — Affiche l'XP, le niveau, le streak, l'avancement par domaine, les badges et le bilan IA Skill Analyzer.
  */
 export default async function ProgressionPage() {
   const supabase = await createClient();
@@ -58,7 +59,7 @@ export default async function ProgressionPage() {
               Progression & Niveau
             </h1>
             <p className="text-xs text-gray-400 mt-1">
-              Suivi en temps réel de votre XP, niveau, streak, badges et maîtrise par domaine.
+              Suivi en temps réel de votre XP, niveau, streak, badges, bilan Skill Analyzer et maîtrise par domaine.
             </p>
           </div>
         </div>
@@ -71,7 +72,7 @@ export default async function ProgressionPage() {
           <div>
             <span className="font-semibold block">Erreur de chargement de la progression</span>
             <span className="text-amber-300/80">
-              {(progError || badgesError)?.message || 'Assurez-vous que les migrations SQL 03_progression.sql et 06_badges.sql sont appliquées.'}
+              {(progError || badgesError)?.message || 'Assurez-vous que les migrations SQL sont appliquées.'}
             </span>
           </div>
         </div>
@@ -168,6 +169,9 @@ export default async function ProgressionPage() {
           </div>
         </div>
       </div>
+
+      {/* Widget Agent IA Skill Analyzer */}
+      <SkillAnalyzerWidget />
 
       {/* Section Trophées & Badges */}
       <div className="bg-cyber-surface rounded-2xl p-6 sm:p-8 shadow-cyber-card space-y-6">

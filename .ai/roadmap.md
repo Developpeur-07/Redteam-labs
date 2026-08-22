@@ -168,7 +168,7 @@ Tâches atomiques :
 
 ---
 
-## Phase 7 — Gamification & Badges ⏳ (En cours)
+## Phase 7 — Gamification & Badges ✅ (Clôturée)
 **Objectif** : Valoriser la progression et l'assiduité en attribuant dynamiquement des badges de compétences par domaine, d'assiduité (streak) et d'XP.
 
 User Stories :
@@ -185,5 +185,21 @@ Tâches atomiques :
 
 ---
 
+## Phase 8 — Agent IA Skill Analyzer ⏳ (En cours)
+**Objectif** : Analyser l'ensemble des compétences validées, des notes rédigées et de l'assiduité pour produire un bilan de compétences IA structuré avec identification des lacunes et recommandations ciblées.
+
+User Stories :
+1. En tant qu'utilisateur, je peux déclencher un bilan de compétences IA depuis la page `/progression`.
+2. En tant qu'utilisateur, j'obtiens une évaluation synthétique de mon niveau de maturité, de mes forces et des lacunes prioritaires à combler.
+3. En tant qu'utilisateur, je reçois des conseils et recommandations d'apprentissage personnalisés pour ajuster ma roadmap.
+
+Tâches atomiques :
+- [x] Helper serveur `lib/skillAnalyzer.js` avec l'API Gemini REST
+- [x] Route API `/api/skill-analyzer`
+- [x] Composant UI `components/SkillAnalyzerWidget.js`
+- [x] Intégration sur la page `/progression`
+
+---
+
 ## Phases Suivantes (Vision Long Terme)
-Skill Analyzer, SaaS multi-utilisateurs, export de portfolio.
+Export Write-ups & Portfolio Apprenant, Quiz & Défis IA Quotidiens, SaaS multi-utilisateurs.
