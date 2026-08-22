@@ -19,6 +19,7 @@ import {
 } from '@/lib/roadmap';
 import { getUserProgress } from '@/lib/progression';
 import TaskToggle from '@/components/TaskToggle';
+import PlannerTrigger from '@/components/PlannerTrigger';
 
 /**
  * Page Roadmap — affiche les tâches d'un jour (Jour X/365).
@@ -27,7 +28,7 @@ import TaskToggle from '@/components/TaskToggle';
 export default async function RoadmapPage({ searchParams }) {
   const params = await searchParams;
   const supabase = await createClient();
-  const { profile, error: profileError } = await getProfileForRoadmap(supabase);
+  const { profile, user, error: profileError } = await getProfileForRoadmap(supabase);
 
   if (profileError || !profile?.date_debut) {
     redirect('/onboarding');
@@ -36,7 +37,8 @@ export default async function RoadmapPage({ searchParams }) {
   const currentDay = calculateDayNumber(profile.date_debut);
   const selectedDay = parseDayParam(params.jour) ?? currentDay;
   const { day, tasks, error: roadmapError } = await getRoadmapDayWithTasks(supabase, selectedDay);
-  const { completedTaskIds } = await getUserProgress(supabase, profile.user_id);
+  const { completedTaskIds } = await getUserProgress(supabase, user?.id || profile?.user_id);
+  const { data: domains } = await supabase.from('domains').select('id, nom').order('nom');
 
   const prevDay = clampDayNumber(selectedDay - 1);
   const nextDay = clampDayNumber(selectedDay + 1);
@@ -61,12 +63,15 @@ export default async function RoadmapPage({ searchParams }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 px-4 py-2 bg-cyber-surface rounded-xl text-xs font-semibold shadow-cyber-sm">
-            <Calendar className="w-4 h-4 text-cyber-accent" />
-            <span className={isToday ? 'text-cyber-accent' : 'text-gray-300'}>
-              Jour {selectedDay} / {ROADMAP_TOTAL_DAYS}
-              {isToday && ' — aujourd\'hui'}
-            </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <PlannerTrigger jourNumero={selectedDay} domains={domains || []} />
+            <div className="flex items-center gap-2 px-4 py-2 bg-cyber-surface rounded-xl text-xs font-semibold shadow-cyber-sm">
+              <Calendar className="w-4 h-4 text-cyber-accent" />
+              <span className={isToday ? 'text-cyber-accent' : 'text-gray-300'}>
+                Jour {selectedDay} / {ROADMAP_TOTAL_DAYS}
+                {isToday && ' — aujourd\'hui'}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -126,10 +131,12 @@ export default async function RoadmapPage({ searchParams }) {
       <div className="bg-cyber-surface rounded-2xl p-6 sm:p-8 shadow-cyber-card">
         {day ? (
           <>
-            <h2 className="text-base sm:text-lg font-bold text-white mb-6 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-cyber-accent" />
-              <span>{day.titre}</span>
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-cyber-card">
+              <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-cyber-accent" />
+                <span>{day.titre}</span>
+              </h2>
+            </div>
 
             {tasks.length > 0 ? (
               <div className="space-y-4">
@@ -142,18 +149,27 @@ export default async function RoadmapPage({ searchParams }) {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-gray-400">
-                Aucune tâche n&apos;est définie pour ce jour pour le moment.
-              </p>
+              <div className="text-center py-6 space-y-3">
+                <p className="text-xs text-gray-400">
+                  Aucune tâche n&apos;est définie pour ce jour pour le moment.
+                </p>
+                <div className="flex justify-center">
+                  <PlannerTrigger jourNumero={selectedDay} domains={domains || []} />
+                </div>
+              </div>
             )}
           </>
         ) : (
-          <div className="text-center py-8">
-            <p className="text-sm font-semibold text-white mb-2">Jour {selectedDay}</p>
-            <p className="text-xs text-gray-400 max-w-md mx-auto">
-              Ce jour n&apos;a pas encore de contenu dans la base. Les jours 1 à 7 sont disponibles
-              après exécution de la migration Phase 2.
-            </p>
+          <div className="text-center py-8 space-y-4">
+            <div>
+              <p className="text-sm font-semibold text-white mb-1">Jour {selectedDay}</p>
+              <p className="text-xs text-gray-400 max-w-md mx-auto">
+                Ce jour n&apos;est pas encore créé dans la base de données. Utilisez l&apos;Agent IA Planner pour générer automatiquement le programme de ce jour.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <PlannerTrigger jourNumero={selectedDay} domains={domains || []} />
+            </div>
           </div>
         )}
       </div>

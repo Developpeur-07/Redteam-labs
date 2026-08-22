@@ -151,5 +151,39 @@ Tâches atomiques :
 
 ---
 
+## Phase 6 — Agent IA Planner ✅ (Clôturée)
+**Objectif** : Générer et adapter dynamiquement la roadmap et les tâches d'apprentissage (Jour X/365) via l'IA Gemini selon l'objectif professionnel de l'utilisateur.
+
+User Stories :
+1. En tant qu'utilisateur, je peux demander à l'IA Planner de générer des tâches sur mesure pour n'importe quelle journée de ma roadmap.
+2. En tant qu'utilisateur, je peux cibler un domaine spécifique (ex: Sécurité Web, Active Directory, Cloud, Python) ou saisir un sujet d'accentuation pour ma journée.
+3. En tant qu'utilisateur, les nouvelles tâches s'enregistrent en base de données Supabase et mettent à jour ma progression globale/domaine lorsqu'elles sont complétées.
+
+Tâches atomiques :
+- [x] Migration SQL `05_planner.sql` pour autoriser l'écriture sur `roadmap_days` et `roadmap_tasks`
+- [x] Helper serveur `lib/planner.js` avec l'API Gemini REST
+- [x] Route API `/api/planner/generate`
+- [x] Composant modal interactif `components/PlannerModal.js`
+- [x] Bouton d'action "Générer avec IA" sur la page `/roadmap`
+
+---
+
+## Phase 7 — Gamification & Badges ⏳ (En cours)
+**Objectif** : Valoriser la progression et l'assiduité en attribuant dynamiquement des badges de compétences par domaine, d'assiduité (streak) et d'XP.
+
+User Stories :
+1. En tant qu'utilisateur, je débloque des badges lorsque je complète des tâches dans un domaine ou que j'atteins des jalons d'XP/streak.
+2. En tant qu'utilisateur, je peux consulter la liste de tous mes badges (débloqués et verrouillés) sur la page `/progression` et sur mon `/profile`.
+3. En tant qu'utilisateur, une célébration visuelle s'affiche lorsqu'un nouveau badge est débloqué.
+
+Tâches atomiques :
+- [x] Migration SQL `06_badges.sql` (tables `badges`, `user_badges`, RLS et seeds)
+- [x] Helper serveur `lib/badges.js` pour le calcul et l'attribution des badges
+- [x] Routes API `/api/badges` et `/api/badges/check`
+- [x] Composants UI `BadgeCard.js` et `BadgeUnlockModal.js`
+- [x] Intégration dans `TaskToggle.js`, `/progression` et `/profile`
+
+---
+
 ## Phases Suivantes (Vision Long Terme)
-Orchestrateur multi-agents (Planner, Skill Analyzer), SaaS multi-utilisateurs, badges avancés.
+Skill Analyzer, SaaS multi-utilisateurs, export de portfolio.

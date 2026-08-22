@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Check, Tag, Loader2, FileText, Bot } from 'lucide-react';
 import NoteModal from './NoteModal';
 import MentorDrawer from './MentorDrawer';
+import BadgeUnlockModal from './BadgeUnlockModal';
 
 /**
  * Composant client pour afficher une tâche de la roadmap et permettre sa validation interactive + la prise de note rapide + l'aide Mentor IA.
@@ -19,6 +20,7 @@ export default function TaskToggle({ task, initialCompleted = false }) {
   const [loading, setLoading] = useState(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [mentorOpen, setMentorOpen] = useState(false);
+  const [unlockedBadges, setUnlockedBadges] = useState([]);
 
   const handleToggle = async () => {
     if (loading) return;
@@ -37,6 +39,16 @@ export default function TaskToggle({ task, initialCompleted = false }) {
       if (!res.ok) {
         setCompleted(!nextState);
       } else {
+        if (nextState) {
+          // Vérification automatique du déblocage de badges
+          const badgeRes = await fetch('/api/badges/check', { method: 'POST' }).catch(() => null);
+          if (badgeRes && badgeRes.ok) {
+            const badgeData = await badgeRes.json().catch(() => ({}));
+            if (badgeData.newlyUnlockedBadges && badgeData.newlyUnlockedBadges.length > 0) {
+              setUnlockedBadges(badgeData.newlyUnlockedBadges);
+            }
+          }
+        }
         router.refresh();
       }
     } catch {
@@ -162,6 +174,12 @@ export default function TaskToggle({ task, initialCompleted = false }) {
           description: task.description,
           domainNom: task.domain?.nom || 'Général',
         }}
+      />
+
+      {/* Modale de célébration pour badges débloqués */}
+      <BadgeUnlockModal
+        badges={unlockedBadges}
+        onClose={() => setUnlockedBadges([])}
       />
     </>
   );

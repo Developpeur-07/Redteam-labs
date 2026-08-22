@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { User, Shield, Calendar, Edit3, CheckCircle2, AlertCircle, Compass, ArrowRight } from 'lucide-react';
+import { User, Shield, Calendar, Edit3, CheckCircle2, AlertCircle, Compass, ArrowRight, Award } from 'lucide-react';
 import { getUserProfile, updateUserProfile } from '@/lib/auth';
+import BadgeCard from '@/components/BadgeCard';
 
 /**
  * Page de gestion du profil utilisateur CyberRoad.
@@ -13,6 +14,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [user, setUser] = useState(null);
+  const [badges, setBadges] = useState([]);
+  const [unlockedCount, setUnlockedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [objectif, setObjectif] = useState('');
@@ -36,6 +39,15 @@ export default function ProfilePage() {
       if (profile.date_debut) {
         setDateDebut(new Date(profile.date_debut).toISOString().split('T')[0]);
       }
+
+      // Chargement des badges
+      const badgeRes = await fetch('/api/badges').catch(() => null);
+      if (badgeRes && badgeRes.ok) {
+        const bData = await badgeRes.json().catch(() => ({}));
+        setBadges(bData.badges || []);
+        setUnlockedCount(bData.unlockedCount || 0);
+      }
+
       setLoading(false);
     }
     load();
@@ -82,6 +94,7 @@ export default function ProfilePage() {
   const today = new Date();
   const diffTime = Math.abs(today - startDate);
   const currentDayNumber = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  const unlockedBadgesList = badges.filter((b) => b.unlocked);
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -94,7 +107,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-white">
-                Profil Aprendant
+                Profil Apprenant
               </h1>
               <p className="text-xs text-gray-400">{user?.email}</p>
             </div>
@@ -207,6 +220,34 @@ export default function ProfilePage() {
               </span>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Badges débloqués */}
+      <div className="bg-cyber-surface rounded-2xl p-6 sm:p-8 shadow-cyber-card space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <Award className="w-5 h-5 text-cyber-accent" />
+            <span>Badges & Trophées d'Honneur ({unlockedCount})</span>
+          </h2>
+          <Link
+            href="/progression"
+            className="text-xs text-cyber-accent hover:underline font-semibold"
+          >
+            Voir tous les badges &rarr;
+          </Link>
+        </div>
+
+        {unlockedBadgesList.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {unlockedBadgesList.slice(0, 4).map((badge) => (
+              <BadgeCard key={badge.id} badge={badge} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-400 py-3">
+            Aucun badge n&apos;a encore été débloqué. Validez vos tâches quotidiennes sur la roadmap pour obtenir vos premiers trophées !
+          </p>
         )}
       </div>
 

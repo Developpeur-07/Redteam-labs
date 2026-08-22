@@ -12,26 +12,38 @@ import {
 import { createClient } from '@/lib/supabase/server';
 import { getProfileForRoadmap } from '@/lib/roadmap';
 import { getProgressionOverview } from '@/lib/progression';
+import { getAllBadgesWithUserStatus } from '@/lib/badges';
+import BadgeCard from '@/components/BadgeCard';
 
 /**
- * Page Progression — Affiche l'XP, le niveau, le streak et l'avancement par domaine.
+ * Page Progression — Affiche l'XP, le niveau, le streak, l'avancement par domaine et les badges débloqués.
  */
 export default async function ProgressionPage() {
   const supabase = await createClient();
-  const { profile, error: profileError } = await getProfileForRoadmap(supabase);
+  const { profile, user, error: profileError } = await getProfileForRoadmap(supabase);
 
   if (profileError || !profile?.date_debut) {
     redirect('/onboarding');
   }
 
-  const {
+  const userId = user?.id || profile?.user_id;
+
+  const [{
     totalXp,
     levelInfo,
     streakInfo,
     domainProgress,
     completedTaskIds,
     error: progError,
-  } = await getProgressionOverview(supabase, profile.user_id);
+  }, {
+    badges,
+    unlockedCount,
+    totalCount,
+    error: badgesError,
+  }] = await Promise.all([
+    getProgressionOverview(supabase, userId),
+    getAllBadgesWithUserStatus(supabase, userId),
+  ]);
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -46,20 +58,20 @@ export default async function ProgressionPage() {
               Progression & Niveau
             </h1>
             <p className="text-xs text-gray-400 mt-1">
-              Suivi en temps réel de votre XP, niveau, streak et maîtrise par domaine.
+              Suivi en temps réel de votre XP, niveau, streak, badges et maîtrise par domaine.
             </p>
           </div>
         </div>
       </div>
 
       {/* Erreur Supabase éventuelle */}
-      {progError && (
+      {(progError || badgesError) && (
         <div className="p-4 bg-amber-500/10 rounded-xl text-amber-400 text-xs flex items-start gap-2.5 shadow-cyber-sm">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <div>
             <span className="font-semibold block">Erreur de chargement de la progression</span>
             <span className="text-amber-300/80">
-              {progError.message || 'Assurez-vous que la migration 03_progression.sql est appliquée.'}
+              {(progError || badgesError)?.message || 'Assurez-vous que les migrations SQL 03_progression.sql et 06_badges.sql sont appliquées.'}
             </span>
           </div>
         </div>
@@ -155,6 +167,31 @@ export default async function ProgressionPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Section Trophées & Badges */}
+      <div className="bg-cyber-surface rounded-2xl p-6 sm:p-8 shadow-cyber-card space-y-6">
+        <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <Award className="w-5 h-5 text-cyber-accent" />
+            <span>Badges & Trophées d'Honneur</span>
+          </h2>
+          <span className="text-xs text-cyber-accent font-semibold px-2.5 py-1 bg-cyber-accent/10 rounded-lg">
+            {unlockedCount} / {totalCount} débloqués
+          </span>
+        </div>
+
+        {badges.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {badges.map((badge) => (
+              <BadgeCard key={badge.id} badge={badge} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-400 text-center py-6">
+            Aucun badge n&apos;a été configuré dans la base de données.
+          </p>
+        )}
       </div>
 
       {/* Section Progression par Domaine */}
