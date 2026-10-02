@@ -14,7 +14,7 @@ export default function CheckoutForm({ email, enabled }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('FR');
+  const [countryCode, setCountryCode] = useState('CG');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [readiness, setReadiness] = useState(null);
@@ -123,10 +123,10 @@ export default function CheckoutForm({ email, enabled }) {
           <div><label htmlFor="checkout-last-name" className="mb-1.5 block text-xs font-semibold text-gray-300">Nom</label><input id="checkout-last-name" autoComplete="family-name" required maxLength={50} value={lastName} onChange={(event) => setLastName(event.target.value)} className="w-full rounded-lg bg-cyber-surface px-3.5 py-3 text-sm text-white outline-none focus:ring-1 focus:ring-cyber-accent" /></div>
         </div>
         <div className="grid grid-cols-[minmax(0,1fr)_5rem] gap-3">
-          <div><label htmlFor="checkout-phone" className="mb-1.5 block text-xs font-semibold text-gray-300">Téléphone</label><input id="checkout-phone" type="tel" autoComplete="tel-national" inputMode="tel" required value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} placeholder="06 12 34 56 78" className="w-full rounded-lg bg-cyber-surface px-3.5 py-3 text-sm text-white outline-none placeholder:text-gray-600 focus:ring-1 focus:ring-cyber-accent" /></div>
+          <div><label htmlFor="checkout-phone" className="mb-1.5 block text-xs font-semibold text-gray-300">Téléphone</label><input id="checkout-phone" type="tel" autoComplete="tel-national" inputMode="tel" required value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} placeholder="Numéro local" className="w-full rounded-lg bg-cyber-surface px-3.5 py-3 text-sm text-white outline-none placeholder:text-gray-600 focus:ring-1 focus:ring-cyber-accent" /></div>
           <div><label htmlFor="checkout-country" className="mb-1.5 block text-xs font-semibold text-gray-300">Pays</label><input id="checkout-country" autoComplete="country" required minLength={2} maxLength={2} value={countryCode} onChange={(event) => setCountryCode(event.target.value.toUpperCase())} aria-describedby="checkout-country-hint" className="w-full rounded-lg bg-cyber-surface px-3 py-3 text-sm uppercase text-white outline-none focus:ring-1 focus:ring-cyber-accent" /></div>
         </div>
-        <p id="checkout-country-hint" className="-mt-2 text-[10px] text-gray-500">Code pays ISO à 2 lettres</p>
+        <p id="checkout-country-hint" className="-mt-2 text-[10px] text-gray-500">Congo-Brazzaville (CG) par défaut. Utilisez le code ISO de votre pays.</p>
       </div>
       {error && <p role="alert" className="mt-4 rounded-lg bg-red-400/10 px-3 py-2.5 text-xs leading-5 text-red-300">{error}</p>}
       {!enabled && <p role="status" className="mt-4 rounded-lg bg-amber-300/10 px-3 py-2.5 text-xs leading-5 text-amber-200">Le paiement est momentanément indisponible. Réessayez plus tard.</p>}
