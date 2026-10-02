@@ -218,7 +218,7 @@ Tâches atomiques :
 
 ---
 
-## Phase 9 — Export Write-ups & Portfolio Apprenant ⏳ (En cours)
+## Phase 9 — Export Write-ups & Portfolio Apprenant ✅ (Clôturée)
 **Objectif** : Valoriser et partager l'ensemble des accomplissements, badges et write-ups d'apprentissage via une page dédiée `/portfolio` et permettre l'exportation des notes au format Markdown (.md) et PDF.
 
 User Stories :
