@@ -53,6 +53,11 @@ export default function CheckoutForm({ email, enabled }) {
     event.preventDefault();
     if (!enabled || checking || !readiness?.ready) return;
     setError('');
+    const normalizedPhone = phoneNumber.replace(/\D/g, '');
+    if (countryCode === 'FR' && normalizedPhone.length !== 10) {
+      setError('Pour la France, saisissez un numéro de téléphone à 10 chiffres.');
+      return;
+    }
     setLoading(true);
 
     try {

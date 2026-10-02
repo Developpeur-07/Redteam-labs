@@ -4,6 +4,31 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 export const runtime = 'nodejs';
 
+function getPublicBaseUrl(request) {
+  const configuredUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const isVercel = Boolean(process.env.VERCEL_URL);
+
+  if (configuredUrl) {
+    try {
+      const url = new URL(configuredUrl);
+      if (url.protocol === 'https:' && url.hostname !== 'localhost') return url.origin;
+      if (!isVercel && url.protocol === 'http:' && url.hostname === 'localhost') return url.origin;
+    } catch {
+      // Fall back to the deployment URL below.
+    }
+  }
+
+  if (isVercel) {
+    const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+    return vercelHost ? `https://${vercelHost}` : '';
+  }
+
+  const requestUrl = new URL(request.url);
+  return requestUrl.protocol === 'https:' || requestUrl.hostname === 'localhost'
+    ? requestUrl.origin
+    : '';
+}
+
 export async function POST(request) {
   if (process.env.NEXT_PUBLIC_CHARIOW_CHECKOUT_ENABLED !== 'true') {
     return NextResponse.json({ error: 'Le paiement en ligne est momentanément indisponible.' }, { status: 503 });
@@ -65,8 +90,11 @@ export async function POST(request) {
   if (phoneNumber.length < 6 || phoneNumber.length > 20 || !/^[A-Z]{2}$/.test(countryCode)) {
     return NextResponse.json({ error: 'Vérifiez votre téléphone et le code pays ISO à 2 lettres.' }, { status: 400 });
   }
+  if (countryCode === 'FR' && phoneNumber.length !== 10) {
+    return NextResponse.json({ error: 'Pour la France, saisissez un numéro de téléphone à 10 chiffres.' }, { status: 400 });
+  }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
+  const baseUrl = getPublicBaseUrl(request);
   if (!baseUrl) {
     return NextResponse.json({ error: 'L’URL publique de CyberRoad n’est pas configurée.' }, { status: 503 });
   }
@@ -92,8 +120,22 @@ export async function POST(request) {
 
     const result = await response.json();
     if (!response.ok) {
+      const fieldErrors = Object.entries(result?.errors || {})
+        .flatMap(([field, messages]) => (Array.isArray(messages) ? messages : [messages])
+          .filter((message) => typeof message === 'string')
+          .map((message) => `${field}: ${message}`))
+        .slice(0, 3);
+      const error = response.status === 401
+        ? 'Chariow refuse la clé API configurée.'
+        : response.status === 404
+          ? 'Produit Chariow introuvable ou non publié. Vérifiez CHARIOW_PRODUCT_ID.'
+          : response.status === 422 && fieldErrors.length
+            ? `Chariow a refusé ces informations : ${fieldErrors.join(' ; ')}`
+            : response.status === 422
+              ? 'Chariow a refusé la demande. Vérifiez le produit, le numéro de téléphone et l’URL de retour.'
+              : 'Chariow n’a pas pu démarrer le paiement. Réessayez ou vérifiez la configuration.';
       return NextResponse.json(
-        { error: 'Chariow n’a pas pu démarrer le paiement. Vérifiez les informations saisies.' },
+        { error },
         { status: response.status === 422 ? 422 : 502 }
       );
     }

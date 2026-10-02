@@ -15,12 +15,19 @@ export async function GET() {
   const productId = process.env.CHARIOW_PRODUCT_ID || '';
   const apiKey = process.env.CHARIOW_API_KEY || '';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const isVercel = Boolean(process.env.VERCEL_URL);
   let validAppUrl = false;
   try {
     const url = new URL(appUrl);
-    validAppUrl = url.protocol === 'https:' || url.hostname === 'localhost';
+    validAppUrl = url.protocol === 'https:' && url.hostname !== 'localhost';
+    if (!isVercel && url.protocol === 'http:' && url.hostname === 'localhost') {
+      validAppUrl = true;
+    }
   } catch {
     validAppUrl = false;
+  }
+  if (!validAppUrl && isVercel) {
+    validAppUrl = Boolean(process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL);
   }
 
   const checks = [
@@ -33,7 +40,7 @@ export async function GET() {
     { id: 'product_id', label: 'Identifiant produit Chariow renseigné', ok: /^prd_[\w-]+$/.test(productId) },
     { id: 'pulse_secret', label: 'Secret du Pulse renseigné côté serveur', ok: Boolean(process.env.CHARIOW_PULSE_SECRET?.startsWith('whsec_')) },
     { id: 'supabase_admin', label: 'Clé serveur Supabase renseignée', ok: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY) },
-    { id: 'return_url', label: 'URL de retour configurée en HTTPS', ok: validAppUrl },
+    { id: 'return_url', label: 'URL publique HTTPS disponible pour le retour Chariow', ok: validAppUrl },
   ];
 
   const [{ error: entitlementError }, { error: salesError }] = await Promise.all([
