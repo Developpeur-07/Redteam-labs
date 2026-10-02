@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { checkAndUnlockBadges } from '@/lib/badges';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * POST /api/badges/check — Évalue la progression de l'utilisateur et lui attribue les badges auxquels il est éligible.
@@ -17,6 +18,9 @@ export async function POST() {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const { newlyUnlockedBadges, error } = await checkAndUnlockBadges(supabase, user.id);
 

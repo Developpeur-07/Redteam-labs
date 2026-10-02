@@ -43,12 +43,15 @@ export default function RegisterPage() {
         return;
       }
 
-      if (data?.user) {
-        setSuccessMsg('Compte créé avec succès ! Redirection vers la configuration de profil...');
+      if (data?.user && data?.session) {
+        setSuccessMsg('Compte créé avec succès ! Redirection vers la finalisation de votre accès...');
         setTimeout(() => {
-          router.push('/onboarding');
+          router.push('/checkout');
           router.refresh();
-        }, 1500);
+        }, 900);
+      } else if (data?.user) {
+        setSuccessMsg('Compte créé. Vérifiez votre boîte e-mail pour confirmer votre adresse, puis connectez-vous pour continuer.');
+        setLoading(false);
       }
     } catch {
       setErrorMsg('Une erreur inattendue est survenue.');

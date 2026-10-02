@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { toggleTaskProgress } from '@/lib/progression';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * Endpoint API POST pour valider ou dé-valider une tâche.
@@ -17,6 +18,9 @@ export async function POST(request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const body = await request.json();
     const { taskId, completed } = body;

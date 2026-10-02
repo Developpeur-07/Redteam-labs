@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generatePlannerTasks } from '@/lib/planner';
 import { clampDayNumber } from '@/lib/roadmap';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * POST /api/planner/generate
@@ -20,6 +21,9 @@ export async function POST(request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     // 2. Body parameters
     const body = await request.json();

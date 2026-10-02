@@ -55,7 +55,10 @@ export async function middleware(request) {
   const pathname = request.nextUrl.pathname;
 
   // Routes Phase 1 (+ futures routes dashboard protégées)
-  const protectedRoutes = ['/profile', '/onboarding', '/roadmap', '/progression', '/notes'];
+  const protectedRoutes = [
+    '/profile', '/onboarding', '/roadmap', '/progression', '/notes', '/portfolio',
+    '/checkout', '/payment/return',
+  ];
   const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
   const authRoutes = ['/login', '/register'];
@@ -69,15 +72,31 @@ export async function middleware(request) {
   }
 
   if (user && (isProtected || isAuthPage)) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('objectif')
-      .eq('user_id', user.id)
-      .maybeSingle();
+    const [{ data: profile }, { data: entitlement }] = await Promise.all([
+      supabase.from('profiles').select('objectif').eq('user_id', user.id).maybeSingle(),
+      supabase.from('user_entitlements').select('status').eq('user_id', user.id).maybeSingle(),
+    ]);
 
     const objectifOk = hasObjectif(profile);
+    const hasAccess = entitlement?.status === 'active';
+    const isCheckoutFlow = pathname.startsWith('/checkout') || pathname.startsWith('/payment/return');
 
     if (isAuthPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = !hasAccess ? '/checkout' : objectifOk ? '/profile' : '/onboarding';
+      return NextResponse.redirect(url);
+    }
+
+    if (!hasAccess) {
+      if (!isCheckoutFlow) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/checkout';
+        return NextResponse.redirect(url);
+      }
+      return supabaseResponse;
+    }
+
+    if (pathname.startsWith('/checkout')) {
       const url = request.nextUrl.clone();
       url.pathname = objectifOk ? '/profile' : '/onboarding';
       return NextResponse.redirect(url);

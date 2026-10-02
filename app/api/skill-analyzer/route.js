@@ -4,6 +4,7 @@ import { getProfileForRoadmap } from '@/lib/roadmap';
 import { getProgressionOverview } from '@/lib/progression';
 import { getUserNotes } from '@/lib/notes';
 import { analyzeUserSkills } from '@/lib/skillAnalyzer';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * POST /api/skill-analyzer — Génère une analyse de compétences personnalisée par l'Agent IA Skill Analyzer.
@@ -21,6 +22,9 @@ export async function POST() {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     // 2. Récupération des données utilisateur en parallèle
     const [{ profile }, overview, { notes }] = await Promise.all([

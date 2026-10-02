@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Shield, Terminal, Database, CheckCircle2, AlertCircle, RefreshCw, Cpu, Activity } from 'lucide-react';
 
 /**
@@ -82,6 +83,15 @@ export default function HomePage() {
             <Terminal className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
         </div>
+      </div>
+
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+        <Link href="/register" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyber-accent px-5 text-sm font-bold text-cyber-bg transition hover:bg-cyan-300">
+          Commencer mon parcours
+        </Link>
+        <Link href="/login" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-cyber-surface px-5 text-sm font-semibold text-white transition hover:bg-gray-700">
+          Se connecter
+        </Link>
       </div>
 
       {/* Grid status cards */}

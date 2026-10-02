@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getUserNotes, createNote } from '@/lib/notes';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * GET /api/notes - Liste des notes (avec filtre optionnel ?domainId=...)
@@ -16,6 +17,9 @@ export async function GET(request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const { searchParams } = new URL(request.url);
     const domainId = searchParams.get('domainId');
@@ -45,6 +49,9 @@ export async function POST(request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const body = await request.json();
     const { titre, contenu_markdown, domain_id, task_id } = body;

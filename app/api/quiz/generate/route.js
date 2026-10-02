@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generateQuizForTask } from '@/lib/quiz';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * POST /api/quiz/generate — Génère un quiz QCM de 3 questions pour une tâche donnée.
@@ -18,6 +19,9 @@ export async function POST(request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const body = await request.json();
     const { task, domainNom } = body;

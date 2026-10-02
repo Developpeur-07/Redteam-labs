@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { submitQuizResult } from '@/lib/quiz';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * POST /api/quiz/submit — Soumet les résultats du quiz, crédite le bonus d'XP et évalue l'obtention de badges.
@@ -18,6 +19,9 @@ export async function POST(request) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const body = await request.json();
     const { taskId, score, maxScore } = body;

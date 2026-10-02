@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { updateNote, deleteNote, getNoteById } from '@/lib/notes';
+import { requireActiveEntitlement } from '@/lib/entitlement';
 
 /**
  * GET /api/notes/[id] - Détails d'une note
@@ -17,6 +18,9 @@ export async function GET(request, { params }) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const { note, error } = await getNoteById(supabase, user.id, id);
     if (error || !note) {
@@ -44,6 +48,9 @@ export async function PUT(request, { params }) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const body = await request.json();
     const { titre, contenu_markdown, domain_id, task_id } = body;
@@ -84,6 +91,9 @@ export async function DELETE(request, { params }) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
+
+    const accessError = await requireActiveEntitlement(supabase, user.id);
+    if (accessError) return accessError;
 
     const { success, error } = await deleteNote(supabase, user.id, id);
     if (error || !success) {
