@@ -101,7 +101,7 @@ export default function CheckoutForm({ email, enabled }) {
           <p className="mt-3 text-xs text-gray-400">Vérification de Supabase et du produit auprès de Chariow…</p>
         ) : (
           <>
-            {readiness?.product && <p className="mt-3 text-xs text-gray-200">Produit : <strong>{readiness.product.name}</strong> <span className="text-gray-500">({readiness.product.id})</span></p>}
+            {readiness?.product && <p className="mt-3 text-xs text-gray-200">Produit : <strong>{readiness.product.name}</strong> <span className="text-gray-500">({readiness.product.type} · {readiness.product.pricingType})</span></p>}
             {readiness?.error && <p role="alert" className="mt-3 text-xs text-amber-200">{readiness.error}</p>}
             <ul className="mt-3 space-y-2">
               {readiness?.checks?.map((check) => (

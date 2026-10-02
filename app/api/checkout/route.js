@@ -125,6 +125,7 @@ export async function POST(request) {
           .filter((message) => typeof message === 'string')
           .map((message) => `${field}: ${message}`))
         .slice(0, 3);
+      const providerMessage = typeof result?.message === 'string' ? result.message.trim().slice(0, 240) : '';
       const error = response.status === 401
         ? 'Chariow refuse la clé API configurée.'
         : response.status === 404
@@ -132,7 +133,7 @@ export async function POST(request) {
           : response.status === 422 && fieldErrors.length
             ? `Chariow a refusé ces informations : ${fieldErrors.join(' ; ')}`
             : response.status === 422
-              ? 'Chariow a refusé la demande. Vérifiez le produit, le numéro de téléphone et l’URL de retour.'
+              ? `Chariow a refusé la demande${providerMessage ? ` : ${providerMessage}` : '. Vérifiez le produit, le numéro de téléphone et l’URL de retour.'}`
               : 'Chariow n’a pas pu démarrer le paiement. Réessayez ou vérifiez la configuration.';
       return NextResponse.json(
         { error },

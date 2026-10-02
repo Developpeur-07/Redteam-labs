@@ -65,12 +65,21 @@ export async function GET() {
       const result = await response.json();
       if (response.ok && result?.data?.id === productId) {
         const details = result.data;
+        const productType = details.type || details.product_type || 'unknown';
+        const pricingType = details.pricing?.type || 'unknown';
+        const supportedTypes = ['downloadable', 'course', 'license', 'bundle'];
+        const supportedPricing = ['free', 'one_time'];
+        const checkoutCompatible = supportedTypes.includes(productType) && supportedPricing.includes(pricingType);
         product = {
           id: details.id,
           name: details.name || 'Produit Chariow',
-          type: details.type || details.product_type || 'Type non communiqué',
+          type: productType,
+          pricingType,
+          checkoutCompatible,
         };
-        productMessage = 'Produit retrouvé par l’API Chariow.';
+        productMessage = checkoutCompatible
+          ? 'Produit retrouvé et compatible avec l’API Checkout.'
+          : `Produit identifié (${productType} / ${pricingType}), mais ce type n’est pas pris en charge par l’API Checkout.`;
       } else {
         productMessage = response.status === 401
           ? 'Chariow refuse la clé API. Vérifiez-la dans les variables de production Vercel.'
@@ -83,7 +92,7 @@ export async function GET() {
     }
   }
 
-  checks.push({ id: 'product_api', label: productMessage, ok: Boolean(product) });
+  checks.push({ id: 'product_api', label: productMessage, ok: Boolean(product?.checkoutCompatible) });
 
   return NextResponse.json({
     ready: checks.every((check) => check.ok),
