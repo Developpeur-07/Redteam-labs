@@ -12,7 +12,8 @@ Chaque mission porte un identifiant unique `M-XXX`, identique sur toutes les bra
 
 | Mission | Domaine | Statut |
 |---|---|---|
-| M-001 — Chaine reseau A-Z sur Homelab (Metasploitable2 + Debian + Win Server 2019) | Réseau | En cours (Linear JES-5) |
+| M-001 — Chaine reseau A-Z sur Homelab (Metasploitable2 + Debian) | Réseau | En cours (Linear JES-5) |
+| M-002 — Chaine Windows/AD A-Z (Win Server 2019) | Windows/AD | Planifiée — reportée depuis M-001 (disque), Linear backlog |
 
 ## Structure du depot
 

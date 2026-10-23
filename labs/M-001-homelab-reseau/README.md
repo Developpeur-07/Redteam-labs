@@ -12,6 +12,8 @@
 | C3 | Windows Server 2019 | Cible AD/Windows | ISO **evaluation officielle Microsoft (180j, renouvelable une fois : `slmgr /rearm` → 360j)** — AUCUNE licence requise : ecran Product Key → `I don't have a product key` → edition `Standard (Desktop Experience) (Evaluation)`. Download officiel : microsoft.com/evalcenter/evaluate-windows-server-2019. AUCUNE cle crackee, AUCUN keygen/KMS. Activation eval : internet requis les 10 premiers jours. |
 | A | Kali/Parrot (attaquant) | Poste d'attaque | Meme segment que les cibles |
 
+> **Périmètre de la session actuelle** : C1 + C2 + A. La chaine A-Z s'exécute intégralement sur C1/C2. C3 est reportée vers la mission **M-002** (chaine Windows/AD), à ouvrir dès que 10 GB de disque sont disponibles sur l'hôte.
+
 ## Phases
 
 | # | Phase | Dossier | Ticket Linear | Critere de fin |

@@ -17,7 +17,7 @@ Correler **chaque** service/version identifie au recon avec ses vulnérabilités
 | V-005 | C1 | MS-SQL 1433 | MSSQL 2000 sa/sa (lab) | `mssqlclient.py sa:sa@<ip>` | — | a verifier |
 | V-006 | C1 | MySQL 3306 | MySQL root/root (lab) | `mysql -u root -proot -h <ip>` | — | a verifier |
 | V-007 | C2 | (a decouvrir) | audit de config | — | — | a decouvrir |
-| V-008 | C3 | (a decouvrir) | audit de config (NLA, SMB signing, LLMNR/NBT-NS) | — | — | a decouvrir |
+| V-008 | C3 | — | **reportée → M-002** : audit Windows/AD (NLA, SMB signing, LLMNR/NBT-NS) | — | — | reportée |
 
 ## Generation des payloads (lab uniquement)
 

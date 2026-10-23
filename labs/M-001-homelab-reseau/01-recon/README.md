@@ -28,7 +28,7 @@
 |---|---|---|---|---|---|---|---|
 | C1 Metasploitable2 | | | | | | | |
 | C2 Debian | | | | | | | |
-| C3 Win Server 2019 | | | | | | | |
+| C3 Win Server 2019 | — | — | — | — | — | — | Reportée → M-002 (disque) |
 
 ## Points a verifier specialement (lab)
 
