@@ -24,3 +24,7 @@ yarn-error.log*
 *.pem
 .idea/
 .vscode/
+
+# RedTeam OPS — artefacts locaux de session (jamais committe)
+payloads/generated/
+archives/
