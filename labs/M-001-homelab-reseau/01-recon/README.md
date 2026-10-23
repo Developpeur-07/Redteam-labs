@@ -26,8 +26,8 @@
 
 | Cible | IP | MAC | OS | Services ouverts (port/proto/version) | Comptes exposes | Partages | Notes |
 |---|---|---|---|---|---|---|---|
-| C1 Metasploitable2 | | | | | | | |
-| C2 Debian | | | | | | | |
+| C1 Metasploitable2 | 192.168.94.129 | | | | | | pivot vers /20 |
+| C2 Debian | 192.168.20.129 (via C1) | | | | | | recon via tunnel apres foothold C1 |
 | C3 Win Server 2019 | — | — | — | — | — | — | Reportée → M-002 (disque) |
 
 ## Points a verifier specialement (lab)

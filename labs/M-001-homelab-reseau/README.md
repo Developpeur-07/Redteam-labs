@@ -5,12 +5,29 @@
 
 ## Cibles autorisees (homelab, controle direct uniquement)
 
-| Code | Machine | Rôle | Notes |
+| Code | Machine | Rôle | Adresse |
 |---|---|---|---|
-| C1 | Metasploitable2 | Cible vulnérable intentionnelle | ISO officiel, vulns connues (FTP, Telnet, Samba, SNMP, MSSQL, MySQL, HTTP) |
-| C2 | Debian | Cible secondaire | Durcissement a la fin de la mission |
-| C3 | Windows Server 2019 | Cible AD/Windows | ISO **evaluation officielle Microsoft (180j, renouvelable une fois : `slmgr /rearm` → 360j)** — AUCUNE licence requise : ecran Product Key → `I don't have a product key` → edition `Standard (Desktop Experience) (Evaluation)`. Download officiel : microsoft.com/evalcenter/evaluate-windows-server-2019. AUCUNE cle crackee, AUCUN keygen/KMS. Activation eval : internet requis les 10 premiers jours. |
-| A | Kali/Parrot (attaquant) | Poste d'attaque | Meme segment que les cibles |
+| A | Kali/Linux (attaquant) | Poste d'attaque | eth0 `192.168.94.135/24` |
+| C1 | Metasploitable2 | Cible vulnérable **+ PIVOT** | eth0 `192.168.94.129/24` · eth1 `192.168.20.128/24` |
+| C2 | Debian | Cible finale (prise de main totale) | `192.168.20.129/24` — **uniquement via C1** |
+| C3 | Windows Server 2019 | Cible AD/Windows | **REPORTÉE → M-002** (disque) |
+
+## Topologie réelle
+
+```
+192.168.94.0/24                         192.168.20.0/24
+┌──────────────────┐                    ┌──────────────────────┐
+│ A  .94.135       │                    │ C2  .20.129 (Debian) │
+│ (attaquant)      │                    └─────────────────────┘
+────────┬─────────                               │
+         └──────────────┬──────────────────────────┘
+                   C1 Metasploitable (PIVOT)
+              eth0 .94.129 · eth1 .20.128
+```
+
+- **C1 est le pivot** : seul chemin A → C2.
+- **Objectif mission** : exploiter toutes les vulns des services de C1 (FTP, Telnet, Samba, SNMP, MSSQL, MySQL, HTTP…), puis pivoter vers C2 pour la prise de main totale.
+- **OPSEC** : une seule source (A), cadence de scan réelle (-T2), journalisation de chaque commande (RoE). La phase 04 analysera ce que la défense (logs C1/C2) a vu.
 
 > **Périmètre de la session actuelle** : C1 + C2 + A. La chaine A-Z s'exécute intégralement sur C1/C2. C3 est reportée vers la mission **M-002** (chaine Windows/AD), à ouvrir dès que 10 GB de disque sont disponibles sur l'hôte.
 
