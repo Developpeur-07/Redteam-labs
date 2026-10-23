@@ -9,7 +9,7 @@
 |---|---|---|---|
 | C1 | Metasploitable2 | Cible vulnérable intentionnelle | ISO officiel, vulns connues (FTP, Telnet, Samba, SNMP, MSSQL, MySQL, HTTP) |
 | C2 | Debian | Cible secondaire | Durcissement a la fin de la mission |
-| C3 | Windows Server 2019 | Cible AD/Windows | ISO **evaluation officielle Microsoft 120j** — ecran Product Key : `I don't have a product key`. AUCUNE cle crackee, AUCUN keygen/KMS. Alternative : Extended Evaluation 180j. |
+| C3 | Windows Server 2019 | Cible AD/Windows | ISO **evaluation officielle Microsoft (180j, renouvelable une fois : `slmgr /rearm` → 360j)** — AUCUNE licence requise : ecran Product Key → `I don't have a product key` → edition `Standard (Desktop Experience) (Evaluation)`. Download officiel : microsoft.com/evalcenter/evaluate-windows-server-2019. AUCUNE cle crackee, AUCUN keygen/KMS. Activation eval : internet requis les 10 premiers jours. |
 | A | Kali/Parrot (attaquant) | Poste d'attaque | Meme segment que les cibles |
 
 ## Phases
