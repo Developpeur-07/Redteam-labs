@@ -28,6 +28,7 @@
 - **C1 est le pivot** : seul chemin A → C2.
 - **Objectif mission** : exploiter toutes les vulns des services de C1 (FTP, Telnet, Samba, SNMP, MSSQL, MySQL, HTTP…), puis pivoter vers C2 pour la prise de main totale.
 - **OPSEC** : une seule source (A), cadence de scan réelle (-T2), journalisation de chaque commande (RoE). La phase 04 analysera ce que la défense (logs C1/C2) a vu.
+- **2026-10-24 — Découverte d'isolement** : A peut router vers /20 via la passerelle .94.2 (l'hôte VMware route entre les 2 segments) → le pivot ne serait pas "nécessaire" sans mesure. **Décision : isolation par le firewall de C2** (autoriser uniquement 192.168.20.128 = le pivot) — pattern de segmentation réel. Voir 03-exploitation (section Pivot). C2 (192.168.20.129) ne répondait pas au ping → VM à vérifier (up + IP).
 
 > **Périmètre de la session actuelle** : C1 + C2 + A. La chaine A-Z s'exécute intégralement sur C1/C2. C3 est reportée vers la mission **M-002** (chaine Windows/AD), à ouvrir dès que 10 GB de disque sont disponibles sur l'hôte.
 
