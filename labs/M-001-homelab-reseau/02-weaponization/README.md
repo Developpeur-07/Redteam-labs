@@ -30,7 +30,7 @@ Correler **chaque** service/version identifie au recon avec ses vulnérabilités
 | V-016 | C1 | SMTP 25 — Postfix | SSLv2 + VRFY (enum users) | `openssl s_client` / VRFY | ⏳ mineur |
 | V-017 | C1 | IRC 6667 — UnrealIRCd 3.2.8 | DCC (enum, transfert) | client IRC | ⏳ mineur |
 | V-018 | C1 | UDP : 53, 111, 137, 2049 ouverts + **161 open\|filtered** | SNMP community publique ? (161) ; open\|filtered = hypothèse à confirmer | `snmpwalk -v1 -c public 192.168.94.129` | ⏳ snmpwalk |
-| V-019 | C2 | (à découvrir via pivot) | — | tunnel A→C1→C2 (JES-14) | 🔒 pivot |
+| V-019 | C2 (192.168.20.128) | (à découvrir) | — | **pivot opérationnel** : relais socat C1 8080→.20.128:80 ✅ ; relayer le 22 (SSH) puis recon | ⏳ recon |
 | V-020 | C3 | — | **reportée → M-002** | — | reportée |
 
 ## Generation des payloads (lab uniquement)

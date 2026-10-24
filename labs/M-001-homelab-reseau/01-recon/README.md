@@ -39,7 +39,7 @@
 | Cible | IP | MAC | OS | Services ouverts (port/proto/version) | Comptes exposes | Partages | Notes |
 |---|---|---|---|---|---|---|---|
 | C1 Metasploitable2 | 192.168.94.129 (gw .2) | _(à compléter : `arp -an`)_ | Unix/Linux, Ubuntu 8.04 (Metasploitable2) | **30 ports TCP** : 21 vsftpd 2.3.4 (anon), 22 OpenSSH 4.7p1, 23 telnetd, 25 Postfix (SSLv2!), 53 BIND 9.4.2, 80 Apache 2.2.8 DAV, 111 rpcbind, 139/445 Samba 3.0.20 (signing OFF), 512-514 rsh/rlogin, 1099 java-rmi, **1524 bindshell ROOT**, 2049 NFS, 2121 ProFTPD 1.3.1, 3306 MySQL 5.0.51a, 3632 distccd 4.2.4, 5432 PostgreSQL 8.3, 5900 VNC 3.3, 6000 X11, 6667/6697 UnrealIRCd 3.2.8, 8009 Jserv AJP, 8180 Tomcat 5.5, 8787 Ruby DRb, + 4 ports dynamiques RPC (mountd/nlockmgr/java-rmi/status) · **UDP** : 53, 111, 137, 2049 ouverts ; 161 (SNMP) `open|filtered` → confirmer par snmpwalk | à compléter (smbclient, ftp) | à compléter | pivot vers /20 ; A n'a AUCUNE route directe vers /20 (ping → Host Unreachable via gw) ; scans : recon/c1_tcp_open.txt + c1_tcp_detail.nmap + c1_udp.nmap |
-| C2 Debian | 192.168.20.129 (via C1) | | | | | | recon via tunnel apres foothold C1 |
+| C2 Debian | 192.168.20.128 (via pivot C1 — à confirmer par `ip -br addr`) | | | | | | **pivot opérationnel** (relais socat C1 : 8080→.20.128:80 ✅ 200 OK Apache/2.4.54 Debian) ; recon à lancer depuis C1 |
 | C3 Win Server 2019 | — | — | — | — | — | — | Reportée → M-002 (disque) |
 
 ## Points a verifier specialement (lab)
