@@ -14,7 +14,7 @@ Correler **chaque** service/version identifie au recon avec ses vulnérabilités
 |---|---|---|---|---|---|
 | V-001 | C1 | FTP 21 — vsftpd 2.3.4 | Backdoor CVE-2011-4140 (`a] :)(` → shell) + anonyme (230) + msfadmin/msfadmin | `ftp` → login fichiers ✅ ; backdoor à tester | ⏳ shell |
 | V-002 | C1 | Telnet 23 — telnetd | Pas de chiffrement + comptes lab (msfadmin) | `telnet` → login | ⏳ |
-| V-003 | C1 | SMB 445/139 — Samba 3.0.20 | Guest + signing désactivé + usermap_script (exec) | `smbclient //ip/tmp -N` ✅ lecture ; `put` + usermap à tester | ⏳ exec |
+| V-003 | C1 | SMB 445/139 — Samba 3.0.20 | Guest **lecture + écriture ✅** (smb-test.txt) + signing désactivé + usermap_script (exec) | `smbclient //ip/tmp -N -c 'put/ls'` ; owner du fichier à confirmer (`ls -ln`) ; usermap à tester | ⏳ exec |
 | V-004 | C1 | SSH 22 — OpenSSH 4.7p1 | Comptes lab (msfadmin → sudo) | `ssh msfadmin@ip` | ⏳ |
 | V-005 | C1 | **1524 — bindshell** | **Shell root à l'écoute** (backdoor de l'image) | `nc -nv ip 1524` → `id` = **uid=0** | ✅ **ROOT C1** |
 | V-006 | C1 | 3632 — distccd 4.2.4 | CVE-2004-2416 (injection hostname → exec) | exploit distcc | ⏳ |
