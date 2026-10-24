@@ -10,11 +10,18 @@
    nmap -sn 192.168.56.0/24                     # ping sweep
    netdiscover -i eth1                          # alternative
    ```
-2. **Scan ports/services/versions** par host :
+2. **Scan ports/services/versions** par host — méthode 2 temps (triage → détail) :
    ```bash
-   nmap -sV -sC -p- -oN fullscan_<ip>.txt <ip>
-   nmap -O -p <ports-ouverts> <ip>              # OS fingerprinting
+   # Étape 1 — triage rapide : TOUS les ports ouverts, sans versions (1-3 min)
+   nmap -sS -p- -T4 --open -oN c1_tcp_open.txt <ip>
+   # Étape 2 — détail : versions + NSE sur les ports ouverts seulement (2-5 min)
+   nmap -sV -sC -p <PORTS-OUVERTS> -T3 -oA c1_tcp_detail <ip>
+   # UDP top-50 (3-10 min)
+   nmap -sU --top-ports 50 -T4 -oA c1_udp <ip>
+   # OS fingerprinting
+   nmap -O --osscan-guess -p <PORTS-OUVERTS> -T3 -oN c1_os <ip>
    ```
+   > Note : en lab, cadence `-T4` (réaliste et rapide). Le `-T2` (polite) sur `-p-` prend +7h — réservé aux cibles réelles sous monitoring qu'on doit ne pas alerter.
 3. **Script maison** (garde d'autorisation, refuse toute plage non-RFC1918 ou trop large) :
    ```bash
    python3 ../../scripts/recon/scan-lab.py --authorized-targets 192.168.56.0/24 --mission M-001 --outdir ../../archives
