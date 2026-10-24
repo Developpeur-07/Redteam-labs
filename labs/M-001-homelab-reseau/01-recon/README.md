@@ -6,9 +6,9 @@
 
 1. **Decouverte de hosts** (segment lab uniquement)
    ```bash
-   arp-scan --interface=eth1 --localnet        # si couche 2 accessible
-   nmap -sn 192.168.56.0/24                     # ping sweep
-   netdiscover -i eth1                          # alternative
+   arp-scan --interface=eth0 --localnet        # si couche 2 accessible
+   nmap -sn 192.168.94.0/24                     # ping sweep
+   netdiscover -i eth0                          # alternative
    ```
 2. **Scan ports/services/versions** par host — méthode 2 temps (triage → détail) :
    ```bash
@@ -22,12 +22,17 @@
    nmap -O --osscan-guess -p <PORTS-OUVERTS> -T3 -oN c1_os <ip>
    ```
    > Note : en lab, cadence `-T4` (réaliste et rapide). Le `-T2` (polite) sur `-p-` prend +7h — réservé aux cibles réelles sous monitoring qu'on doit ne pas alerter.
-3. **Script maison** (garde d'autorisation, refuse toute plage non-RFC1918 ou trop large) :
+3. **Runner lab** (recommande : prerequis, journal horodate, diagnostic routage C2) :
    ```bash
-   python3 ../../scripts/recon/scan-lab.py --authorized-targets 192.168.56.0/24 --mission M-001 --outdir ../../archives
+   bash ../../scripts/recon/m-001-recon.sh
    ```
-4. **Documenter** la table ci-dessous (a completer pendant la session).
-5. **Archiver** les snapshots nmap dans Drive `M-001/01-recon/` (et `archives/M-001/01-recon/` dans le repo si volumetrie raisonnable).
+4. **Script generique** (autre mission/segment, garde d'autorisation) :
+   ```bash
+   python3 ../../scripts/recon/scan-lab.py --authorized-targets 192.168.94.0/24 --mission M-001 --outdir ../../archives
+   ```
+   (Le segment 192.168.20.0/24 n'est **pas** scannable depuis A — uniquement via pivot apres foothold C1, ticket JES-14.)
+5. **Documenter** la table ci-dessous (a completer pendant la session).
+6. **Archiver** les snapshots nmap dans Drive `M-001/01-recon/` (et `archives/M-001/01-recon/` dans le repo si volumetrie raisonnable).
 
 ## Table de cartographie (a completer)
 
